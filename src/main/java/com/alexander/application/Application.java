@@ -1,6 +1,8 @@
 package com.alexander.application;
 
+import com.alexander.graphcore.Edge;
 import com.alexander.graphcore.Graph;
+import lombok.AllArgsConstructor;
 
 public class Application {
 
@@ -8,7 +10,7 @@ public class Application {
 
         System.out.println("Start");
 
-        Graph<Integer> graph = new Graph<>();
+        Graph<Integer, IntegerEdge<Integer>> graph = new Graph<>(false);
         graph.addVertex(1);
         graph.addVertex(2);
         graph.addVertex(3);
@@ -17,19 +19,26 @@ public class Application {
         graph.addVertex(6);
 
 
-        graph.addEdge(1, 2);
-        graph.addEdge(1,3);
-        graph.addEdge(2, 3);
-        graph.addEdge(3,4);
-        graph.addEdge(4,5);
-        graph.addEdge(6,5);
-        graph.addEdge(6,2);
+        graph.addEdge(new IntegerEdge<>(1,2));
+        graph.addEdge(new IntegerEdge<>(1,3));
+        graph.addEdge(new IntegerEdge<>(3,4));
+        graph.addEdge(new IntegerEdge<>(4,5));
+        graph.addEdge(new IntegerEdge<>(5,6));
+        graph.addEdge(new IntegerEdge<>(6,2));
+
+
 
         graph.printAllPaths(1, 6);
         System.out.println("-----");
-        System.out.println(graph.DFS(graph, 3).toString());
-
-
-
     }
+}
+
+class IntegerEdge<E> extends Edge<E> {
+
+
+    public IntegerEdge(E from, E to) {
+        super(from, to);
+    }
+
+
 }
