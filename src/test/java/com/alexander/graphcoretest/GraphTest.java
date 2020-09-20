@@ -149,7 +149,7 @@ public class GraphTest {
 
         List<Edge<Integer>> path = undirectedGraph.findPath(1, 5);
 
-        assertEquals(path.size(), 4);
+        assertEquals(path.size(), 2);
     }
 
 

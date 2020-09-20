@@ -4,10 +4,8 @@ import com.alexander.exceptions.NoSuchPathException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 @Slf4j
 @Data
@@ -36,7 +34,9 @@ public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
         }
     }
 
-    public List<Edge<V>> findPath(V from, V to) throws NoSuchPathException {
+
+
+  /*  public List<Edge<V>> findPath(V from, V to) throws NoSuchPathException {
 
         Map<V, Boolean> visitMap = new HashMap<>();
         List<V> pathList = new ArrayList<>();
@@ -68,7 +68,7 @@ public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
         visitMap.put(from, true);
 
         List<V> adjacencedVerticesForCurrentVertex = adjacencedVertices.get(from);
-        for (V vertex: adjacencedVerticesForCurrentVertex) {
+        for (V vertex : adjacencedVerticesForCurrentVertex) {
             if (!visitMap.containsKey(vertex) || !visitMap.get(vertex)) {
                 pathList.add(vertex);
                 checkIfSearchIsOverAndIfItIsNotOverGoDeeper(vertex, to, visitMap, pathList, allPaths);
@@ -76,6 +76,52 @@ public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
             }
         }
         visitMap.put(from, false);
+    }*/
+
+
+    public List<Edge<V>> findPath(V from, V to) throws NoSuchPathException {
+
+        Map<V, Boolean> visited = new HashMap<>();
+        Set<V> vertices = adjacencedVertices.keySet();
+        for (V vertex : vertices) {
+            visited.put(vertex, false);
+        }
+        List<Edge<V>> edgeList = DFS(from, to, visited);
+        return edgeList;
     }
 
+
+    List<Edge<V>> DFS(V from, V to, Map<V, Boolean> visited) throws NoSuchPathException {
+
+        List<V> path = new ArrayList<>();
+        Stack<V> stack = new Stack<>();
+        stack.push(from);
+
+        while (!stack.empty()) {
+            from = stack.peek();
+            if (from == to) {
+                path.add(from);
+                List<Edge<V>> pathEdges = new ArrayList<>();
+                for (int i = 0; i < path.size() - 1; i++) {
+                    V vertexFrom = path.get(i);
+                    V vertexTo = path.get(i + 1);
+                    pathEdges.add(new Edge<>(vertexFrom, vertexTo));
+                }
+                return pathEdges;
+            }
+            stack.pop();
+
+            if (!visited.get(from)) {
+                path.add(from);
+                visited.put(from, true);
+            }
+
+            for (V vertex : adjacencedVertices.get(from)) {
+                if (!visited.get(vertex))
+                    stack.push(vertex);
+            }
+
+        }
+    throw new NoSuchPathException();
+    }
 }
