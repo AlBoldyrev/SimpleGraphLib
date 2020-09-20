@@ -1,19 +1,20 @@
 package com.alexander.graphcore;
 
+import com.alexander.exceptions.NoSuchPathException;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+@Slf4j
 @Data
-@NoArgsConstructor
-public class Graph<V, E extends Edge<V>> {
+public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
 
-    private boolean isDirected;
-    private Map<V, List<V>> adjacencedVertices = new HashMap<>();
-    private List<E> edges = new ArrayList<>();
+    private final boolean isDirected;
+    private final Map<V, List<V>> adjacencedVertices = new HashMap<>();
 
     public Graph(boolean isDirected) {
         this.isDirected = isDirected;
@@ -35,32 +36,46 @@ public class Graph<V, E extends Edge<V>> {
         }
     }
 
-    public void printAllPaths(V from, V to) {
+    public List<Edge<V>> findPath(V from, V to) throws NoSuchPathException {
 
         Map<V, Boolean> visitMap = new HashMap<>();
         List<V> pathList = new ArrayList<>();
 
         pathList.add(from);
-
-        checkIfSearchIsOverAndIfItIsNotOverGoDeeper(from, to, visitMap, pathList);
+        List<List<Edge<V>>> allPaths = new ArrayList<>();
+        checkIfSearchIsOverAndIfItIsNotOverGoDeeper(from, to, visitMap, pathList, allPaths);
+        if (!CollectionUtils.isEmpty(allPaths)) {
+            return allPaths.get(0);
+        }
+        throw new NoSuchPathException();
     }
 
-    private void checkIfSearchIsOverAndIfItIsNotOverGoDeeper(V from, V to, Map<V, Boolean> visitMap, List<V> pathList) {
+    private void checkIfSearchIsOverAndIfItIsNotOverGoDeeper(V from, V to,
+                                                             Map<V, Boolean> visitMap,
+                                                             List<V> pathList,
+                                                             List<List<Edge<V>>> allPaths) {
 
         if (from == to) {
-            System.out.println(pathList.stream().map(Objects::toString).collect(Collectors.joining(" -> ")));
+            List<Edge<V>> pathEdges = new ArrayList<>();
+            for (int i = 0; i < pathList.size() - 1; i++) {
+                V vertexFrom = pathList.get(i);
+                V vertexTo = pathList.get(i + 1);
+                pathEdges.add(new Edge<>(vertexFrom, vertexTo));
+            }
+            allPaths.add(pathEdges);
             return;
         }
         visitMap.put(from, true);
 
         List<V> adjacencedVerticesForCurrentVertex = adjacencedVertices.get(from);
-        for (V v: adjacencedVerticesForCurrentVertex) {
-            if (!visitMap.containsKey(v) || !visitMap.get(v)) {
-                pathList.add(v);
-                checkIfSearchIsOverAndIfItIsNotOverGoDeeper(v, to, visitMap, pathList);
-                pathList.remove(v);
+        for (V vertex: adjacencedVerticesForCurrentVertex) {
+            if (!visitMap.containsKey(vertex) || !visitMap.get(vertex)) {
+                pathList.add(vertex);
+                checkIfSearchIsOverAndIfItIsNotOverGoDeeper(vertex, to, visitMap, pathList, allPaths);
+                pathList.remove(vertex);
             }
         }
         visitMap.put(from, false);
     }
+
 }
