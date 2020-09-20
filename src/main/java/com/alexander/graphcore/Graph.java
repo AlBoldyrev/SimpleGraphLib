@@ -3,7 +3,6 @@ package com.alexander.graphcore;
 import com.alexander.exceptions.NoSuchPathException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
 
@@ -34,51 +33,6 @@ public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
         }
     }
 
-
-
-  /*  public List<Edge<V>> findPath(V from, V to) throws NoSuchPathException {
-
-        Map<V, Boolean> visitMap = new HashMap<>();
-        List<V> pathList = new ArrayList<>();
-
-        pathList.add(from);
-        List<List<Edge<V>>> allPaths = new ArrayList<>();
-        checkIfSearchIsOverAndIfItIsNotOverGoDeeper(from, to, visitMap, pathList, allPaths);
-        if (!CollectionUtils.isEmpty(allPaths)) {
-            return allPaths.get(0);
-        }
-        throw new NoSuchPathException();
-    }
-
-    private void checkIfSearchIsOverAndIfItIsNotOverGoDeeper(V from, V to,
-                                                             Map<V, Boolean> visitMap,
-                                                             List<V> pathList,
-                                                             List<List<Edge<V>>> allPaths) {
-
-        if (from == to) {
-            List<Edge<V>> pathEdges = new ArrayList<>();
-            for (int i = 0; i < pathList.size() - 1; i++) {
-                V vertexFrom = pathList.get(i);
-                V vertexTo = pathList.get(i + 1);
-                pathEdges.add(new Edge<>(vertexFrom, vertexTo));
-            }
-            allPaths.add(pathEdges);
-            return;
-        }
-        visitMap.put(from, true);
-
-        List<V> adjacencedVerticesForCurrentVertex = adjacencedVertices.get(from);
-        for (V vertex : adjacencedVerticesForCurrentVertex) {
-            if (!visitMap.containsKey(vertex) || !visitMap.get(vertex)) {
-                pathList.add(vertex);
-                checkIfSearchIsOverAndIfItIsNotOverGoDeeper(vertex, to, visitMap, pathList, allPaths);
-                pathList.remove(vertex);
-            }
-        }
-        visitMap.put(from, false);
-    }*/
-
-
     public List<Edge<V>> findPath(V from, V to) throws NoSuchPathException {
 
         Map<V, Boolean> visited = new HashMap<>();
@@ -88,7 +42,6 @@ public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
         }
         return DFS(from, to, visited);
     }
-
 
     List<Edge<V>> DFS(V from, V to, Map<V, Boolean> visited) throws NoSuchPathException {
 
