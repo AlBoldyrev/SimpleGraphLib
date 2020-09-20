@@ -86,8 +86,7 @@ public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
         for (V vertex : vertices) {
             visited.put(vertex, false);
         }
-        List<Edge<V>> edgeList = DFS(from, to, visited);
-        return edgeList;
+        return DFS(from, to, visited);
     }
 
 
