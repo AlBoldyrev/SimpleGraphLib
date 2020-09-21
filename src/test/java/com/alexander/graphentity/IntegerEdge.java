@@ -1,4 +1,4 @@
-package com.alexander.graphentitytest;
+package com.alexander.graphentity;
 
 import com.alexander.graphcore.Edge;
 

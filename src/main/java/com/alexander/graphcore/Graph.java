@@ -74,6 +74,6 @@ public class Graph<V, E extends Edge<V>> implements IGraph<V, E> {
             }
 
         }
-    throw new NoSuchPathException();
+        throw new NoSuchPathException();
     }
 }

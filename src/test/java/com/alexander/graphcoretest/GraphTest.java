@@ -3,7 +3,7 @@ package com.alexander.graphcoretest;
 import com.alexander.exceptions.NoSuchPathException;
 import com.alexander.graphcore.Edge;
 import com.alexander.graphcore.Graph;
-import com.alexander.graphentitytest.IntegerEdge;
+import com.alexander.graphentity.IntegerEdge;
 import org.junit.Test;
 
 import java.util.List;
